@@ -1,0 +1,63 @@
+Test Plan
+
+Test Case 1: Ensure that data coming in from GPS box is valid. The data streams
+are formatted as expected and able to be handled by our logic.  Accuracy is not
+a concern for this test case.
+	Steps:
+		a. Send good data into the controller
+		b. Send bad data into the controller
+	Validation:
+		a. Ensure controller passes on good data
+		b. Ensure controller does
+
+Test Case 2: Ensure that the controller is able to route valid data to the
+proper state.
+	Steps:
+		a. Send data that we know should lead to the standby mode
+		b. Send data that we know should lead to the takeoff / landing mode
+		c. Send data that we know should lead to the in-flight mode
+	Validation:
+		a. Ensure data is sent to standby mode and no other modes, also ensure
+		that machine stays in this state when no other data sent in
+		b. Ensure data is sent to the takeoff / landing mode and no others, also
+		ensure that machine stays in this state when no other data sent in
+		c. Ensure data is sent to the in-flight mode and no others, also ensure
+		that machine stays in this state when no other data sent in
+
+Test Case 3: Ensure data from each state is processed by collision avoidance
+logic appropriately.
+	Steps:
+		a. Send data that we know should trigger a warning from the standby mode
+		b. Send data that we know should trigger a warning from the takeoff /
+		landing mode
+		c. Send data that we know should trigger a warning from the in-flight
+		mode.
+		d. Send data that we know should not trigger a warning from the standby
+		mode
+		e. Send data that we know should not trigger a warning from the takeoff
+		/ landing mode
+		f. Send data that we know should not trigger a warning from the
+		in-flight mode
+	Validation:
+		a. Ensure an output signal fires the send messag logic
+		b. Ensure an output signal fires the send messag logic
+		c. Ensure an output signal fires the send messag logic
+		d. Ensure an output signal does not fire the send messag logic
+		e. Ensure an output signal does not fire the send messag logic
+		f. Ensure an output signal does not fire the send messag logic
+
+Test Case 4: Ensure that the sendMessage logic warns the crew or not as
+designed and logs all messages it is passed.
+	Steps:
+		a. Send data that we know should trigger a warning from the standby mode
+		b. Send data that we know should trigger a warning from the takeoff /
+		landing mode
+		c. Send data that we know should trigger a warning from the in-flight
+		mode
+	Validation:
+		a. Ensure that the crew is not warned as this is standby mode, ensure
+		message is logged
+		b. Ensure that the crew is not warned as this is takeoff / landing mode,
+		ensure message is logged
+		c. Ensure that the crew is warned as this is in-flight mode, ensure the
+		message is logged
