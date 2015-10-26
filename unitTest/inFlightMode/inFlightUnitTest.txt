@@ -1,0 +1,64 @@
+A0 - is the the aircraft that system is currently running on.
+A1 - is another aircraft that close enough to be track my smac radar.
+
+What is need: 
+	is determind max radar range?
+	First warning radar range?
+	Second Warning radar range?
+	Third Warning radar radge?
+
+ToDo:(I would suggest these would be in different a cycle, as the currrent highest risk is getting a simple working protype running)
+Bad data inputs 
+Different altittude checks
+Stop reciveing data
+
+
+Simple check with only one other aircraft in the air. Both A1 and A0 are flying at same altittude.
+
+	Test 1: A1 is on opposite course of A0.
+	Validation: no warning message, plan should be tracked till out of range.
+
+	Test 2: A1 is on course that will pass by A0 within X (1st warning area) distance of each other.
+	Validation: no warning message, First warning message, no warning message.
+
+	Test 3: A1 is on course that will pass by A0 within X (2nd warning area) distance of each other.
+	Validation: no warning message, First warning message, second warning message no warning message.
+.
+
+	Test 4: A1 is on course that will pass by A0 within X (3rd warning area) distance of each other.
+	Validation: no warning message, First warning message, Second warning message, Third warning message, no warning message.
+
+	Test 5: A1 is on course that will pass by A0 within 0 distance and collision will occur.
+	Validation:  no warning message, First warning message, Second warning message, Third warning message.
+	
+	Test 6: A1 is  will be pass infront A0 but will not be 1st warning area range.
+	Validation: no warning message.
+
+	Test 7: A1 is  will be pass infront A0 within 1st warning area range.
+	Validation: no warning message, 1st warning message, no warning message.
+	
+	Test 8: A1 is  will be pass infront A0 within  2nd warning area range.
+	Validation: no warning message, 1st warning message, 2nd warning message, no warning message.
+
+	Test 9: A1  is not moving. A0 is on course that will make A1 0 distance apart and collision will occur.
+	Validation:  no warning message, First warning message, Second warning message, Third warning message.
+
+	Test 10: A0  is not moving. A1 is on course that will make A0 0 distance apart and collision will occur.
+	Validation:  no warning message, First warning message, Second warning message, Third warning message.
+
+	Test 11: A1 is  will be pass behind A0 but will not be 1st warning area range.
+	Validation: no warning message.
+
+	Test 12: A1 is  will be pass behind A0 within 1st warning area range.
+	Validation: no warning message, 1st warning message, no warning message.
+	
+	Test 13: A1 is  will be pass behind A0 within  2nd warning area range.
+	Validation: no warning message, 1st warning message, 2nd warning message, no warning message.
+	
+
+	
+
+
+
+
+
