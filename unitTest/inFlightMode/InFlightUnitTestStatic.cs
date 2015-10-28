@@ -2,6 +2,13 @@
 using InFlightMode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+/*
+* @author team SMAC
+*
+* This is static Method test for InFlight mode
+* 
+* ToDo: Fix input, output to be agreed upon.
+*/
 namespace InFlightUnitTest
 {
     [TestClass]
@@ -10,11 +17,11 @@ namespace InFlightUnitTest
         [TestMethod]
         public void CollisionCheckMethodTest()
         {
-            Array A0;
-            Array A1;
+            byte[] A0 = new byte[1];
+            byte[] A1 = new byte [1];
             double expectedDistance = 1;
             InFlight inFlight = new InFlight();
-            double actualDistance = inFlight.CollisionCheck();
+            double actualDistance = inFlight.CollisionCheck(A0,A1);
             Assert.AreEqual(actualDistance, expectedDistance);
         }
         [TestMethod]
@@ -73,7 +80,6 @@ namespace InFlightUnitTest
             catch (Exception e)
             {
                 StringAssert.Contains(e.Message, "Bad data");
-                Console.Write(e);
             }
             Assert.Fail("No exception was thrown.");
         }
@@ -82,44 +88,55 @@ namespace InFlightUnitTest
         public void NoActionRequestMessageTest()
         {
             int expectedWarning= 0;
+            int warningLevel = 2;
+            byte[] A0 = new byte[1];
+            byte[] A1 = new byte[1];
+
             InFlight inFlight = new InFlight();
 
-            int actualWarning = inFlight.ActionRequestMessage(2);
+            int actualWarning = inFlight.ActionRequestMessage(warningLevel, A0,A1);
             Assert.AreEqual(actualWarning, expectedWarning);
 
             inFlight = new InFlight();
-
-            actualWarning = inFlight.ActionRequestMessage(3);
+            warningLevel = 3;
+            actualWarning = inFlight.ActionRequestMessage(warningLevel, A0,A1);
             Assert.AreEqual(actualWarning, expectedWarning);
         }
         [TestMethod]
         public void UpActionRequestMessageTest()
         {
             int expectedWarning = 1;
+            int warningLevel = 2;
+            byte[] A0 = new byte[1];
+            byte[] A1 = new byte[1];
+
             InFlight inFlight = new InFlight();
 
-            int actualWarning = inFlight.ActionRequestMessage(2);
+            int actualWarning = inFlight.ActionRequestMessage(warningLevel, A0, A1);
             Assert.AreEqual(actualWarning, expectedWarning);
 
             inFlight = new InFlight();
-
-            actualWarning = inFlight.ActionRequestMessage(3);
+            warningLevel = 3;
+            actualWarning = inFlight.ActionRequestMessage(warningLevel, A0, A1);
             Assert.AreEqual(actualWarning, expectedWarning);
-
         }
         [TestMethod]
         public void DownActionRequestMessageTest()
         {
 
             int expectedWarning = 2;
+            int warningLevel = 2;
+            byte[] A0 = new byte[1];
+            byte[] A1 = new byte[1];
+
             InFlight inFlight = new InFlight();
 
-            int actualWarning = inFlight.ActionRequestMessage(2);
+            int actualWarning = inFlight.ActionRequestMessage(warningLevel, A0, A1);
             Assert.AreEqual(actualWarning, expectedWarning);
 
             inFlight = new InFlight();
-        
-            actualWarning = inFlight.ActionRequestMessage(3);
+            warningLevel = 3;
+            actualWarning = inFlight.ActionRequestMessage(warningLevel, A0, A1);
             Assert.AreEqual(actualWarning, expectedWarning);
 
         }
@@ -128,28 +145,36 @@ namespace InFlightUnitTest
         public void LeftActionRequestMessageTest()
         {
             int expectedWarning = 3;
+            int warningLevel = 2;
+            byte[] A0 = new byte[1];
+            byte[] A1 = new byte[1];
+
             InFlight inFlight = new InFlight();
 
-            int actualWarning = inFlight.ActionRequestMessage(2);
+            int actualWarning = inFlight.ActionRequestMessage(warningLevel, A0, A1);
             Assert.AreEqual(actualWarning, expectedWarning);
 
             inFlight = new InFlight();
-
-            actualWarning = inFlight.ActionRequestMessage(3);
+            warningLevel = 3;
+            actualWarning = inFlight.ActionRequestMessage(warningLevel, A0, A1);
             Assert.AreEqual(actualWarning, expectedWarning);
         }
         [TestMethod]
         public void RightActionRequestMessageTest()
         {
             int expectedWarning = 4;
+            int warningLevel = 2;
+            byte[] A0 = new byte[1];
+            byte[] A1 = new byte[1];
+
             InFlight inFlight = new InFlight();
 
-            int actualWarning = inFlight.ActionRequestMessage(2);
+            int actualWarning = inFlight.ActionRequestMessage(warningLevel, A0, A1);
             Assert.AreEqual(actualWarning, expectedWarning);
 
             inFlight = new InFlight();
-
-            actualWarning = inFlight.ActionRequestMessage(3);
+            warningLevel = 3;
+            actualWarning = inFlight.ActionRequestMessage(warningLevel, A0, A1);
             Assert.AreEqual(actualWarning, expectedWarning);
         }
 
@@ -157,10 +182,12 @@ namespace InFlightUnitTest
         public void BadInputActionRequestMessageTest()
         {
             int badWarning = -25;
+            byte[] A0 = new byte[1];
+            byte[] A1 = new byte[1];
             InFlight inFlight = new InFlight();
             try
             {
-                int actualWarning = inFlight.ActionRequestMessage(badWarning);
+                int actualWarning = inFlight.ActionRequestMessage(badWarning,A0,A1);
                    }
             catch (Exception e)
             {
