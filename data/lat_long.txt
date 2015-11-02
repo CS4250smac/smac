@@ -1,0 +1,20 @@
+A basic description of lat-long coordinates for our purposes:
+
+-We will be using 5 decimals points of precision which will give us a expected
+accuracy of 1.1 meters.
+
+-Latitude will be the first value and Longitude will be the second value.
+	ie: 39.73923, -104.99025
+
+	+A negative sign for latitude would denote the southern hemisphere
+	+A negative sign for the longitude would denote the western hemisphere
+
+-As the value for Latitude increases the object will be moving north, if it is
+decreasing the object will be moving south
+
+-As the value for Longitude decreases the object will be moving east, if it is
+decreasing the the object is moving west
+
+I am thinking at this point the JSON data objects should be fairly easy, all
+we need to have in it is lat, long coordinates and an ID for each lat long so
+that our program can order the JSON objects appropriately and calculate vector.
