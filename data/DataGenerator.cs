@@ -50,7 +50,7 @@ namespace DataGenerator
 
 				var parameterLongitude = dbCommands.CreateParameter();
 				parameterLongitude.ParameterName = "?lo";
-				parameterLongitude.Value = lat;
+				parameterLongitude.Value = lon;
 				parameterLongitude.DbType = DbType.Decimal;
 				dbCommands.Parameters.Add(parameterLongitude);
 
