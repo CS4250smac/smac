@@ -10,10 +10,10 @@ namespace DataGenerator
 		static void generateAndWriteData(IDbConnection dbConnection)
 		{
 			IDbCommand dbCommands = dbConnection.CreateCommand();
-
+			dbCommands.CommandType = CommandType.Text;
 			Random rnd = new Random();
 
-			int randomRows = rnd.Next(17, 360);
+			int randomRows = rnd.Next(17, 36);
 			for (int i = 0; i < randomRows; i++)
 			{
 				//Make the time stamp to use as row id (epoch time).
@@ -30,18 +30,36 @@ namespace DataGenerator
 				decimal lat = (decimal) (latitude + randomLatChange);
 				double randomLonChange = rnd.NextDouble() * .0003;
 				decimal lon = (decimal) (longitude + randomLonChange);
+				Console.WriteLine("Iteration: " + i + "\n\tTS: " + timeStamp + "\n\tLat: " + lat +
+					"\n\tLon: " + lon);
 
+			    dbCommands.CommandText = String.Format("INSERT INTO {0} (`id`, latitude, longitude, x, y, `z`)" +
+					"VALUES (?ts, ?la, ?lo, null, null, null);", "data");
 
-				//Write results to db
-				string insertStatement =
-					"INSERT INTO gps_data (id, latitude, longitude, x, y, z)" +
-					"VALUES (" + timeStamp + ", " + lat + ", " + lon +
-						", null, null, null)";
-				
-				dbCommands.CommandText = insertStatement;
+				var parameterTimeStamp = dbCommands.CreateParameter();
+				parameterTimeStamp.ParameterName = "?ts";
+				parameterTimeStamp.Value = timeStamp;
+				parameterTimeStamp.DbType = DbType.Int32;
+				dbCommands.Parameters.Add(parameterTimeStamp);
 
-				int randomSleep = rnd.Next(0, 3);
+				var parameterLatitude = dbCommands.CreateParameter();
+				parameterLatitude.ParameterName = "?la";
+				parameterLatitude.Value = lat;
+				parameterLatitude.DbType = DbType.Decimal;
+				dbCommands.Parameters.Add(parameterLatitude);
+
+				var parameterLongitude = dbCommands.CreateParameter();
+				parameterLongitude.ParameterName = "?lo";
+				parameterLongitude.Value = lat;
+				parameterLongitude.DbType = DbType.Decimal;
+				dbCommands.Parameters.Add(parameterLongitude);
+
+				dbCommands.ExecuteNonQuery();
+
+				int randomSleep = rnd.Next(500, 2000);
 				Thread.Sleep(randomSleep);
+
+				dbCommands.Parameters.Clear();
 			}
 			dbCommands.Dispose();
 			dbCommands = null;
@@ -50,10 +68,10 @@ namespace DataGenerator
 		static IDbConnection connectDb()
 		{
 			string connectionString =
-				"Server=;" +
-				"Database=;" +
-				"User ID=;" +
-				"Password=;" +
+				"Server=localhost;" +
+				"Database=gps_data;" +
+				"User ID=smackers;" +
+				"Password=1234;" +
 				"Pooling=false;";
 			IDbConnection dbConnection = new MySqlConnection(connectionString);
 			dbConnection.Open();
