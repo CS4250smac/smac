@@ -17,7 +17,8 @@ namespace InFlightMode
         *@param GPS1, GPS2
         *@return distance of the two inputs
         */
-        public Double CollisionCheck(Array gps1, Array gps2) {
+        public Double CollisionCheck(decimal[] lat1, decimal[] long1, decimal[] lat2, decimal[] long2) {
+        	//Read data in order, if distance is too close pass distance to WarningMessage
             return 0;
         }
         /*
@@ -35,12 +36,26 @@ namespace InFlightMode
           *ActionRequestMessage will send out an ActionRequestMessage
           * When two object need to avoid a collison
           *
-          *@param warningLevel, GPS1, GPS2;
+          *@param warningLevel;
           *@return ActionRequestMessage
           */
-        public int ActionRequestMessage(int warningLevel, Array gps1, Array gps2)
+        public int ActionRequestMessage(int warningLevel)
         {
-            return 0;
+            return warningLevel;
+        }
+
+        public decimal[] getData(string table, string col)
+        {
+        	
+        }
+
+        public static void main(string[] args) {
+        	decimal[] safeLat1 = getData("safe_data", "lastitude_1");
+        	int safeMessage = ActionRequestMessage(WarningMessage(CollisionDistance(safeLat1, safeLong1, safeLat2, safeLong2)));
+        	Debug.Assert(safeMessage == 0, "Wrong action request message, expecting 0 but was: " + safeMessage);
+
+        	int collisionMessage = ActionRequestMessage(WarningMessage(CollisionDistance(dangerLat1, dangerLong1, dangerLat2, dangerLong2)));
+        	Debug.Assert(collisionMessage == 1, "Wrong action request message, expecting 1 but was: " + collisionMessage);
         }
     }
 }
