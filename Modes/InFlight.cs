@@ -14,16 +14,34 @@ namespace InFlightMode
 
         /*
         *CollisionChecks will take two GPS inputs and checks the
-        *current distance between then and checks if both objects vector
+        *current distance between them and checks if both objects vector
         *would collide if they continue on same vector.
         *
         *@param GPS1, GPS2
         *@return distance of the two inputs
         */
-        public static Double CollisionCheck(decimal[] lat1, decimal[] long1, decimal[] lat2, decimal[] long2) {
-        	//Read data in order, if distance is too close pass distance to WarningMessage
-            return 0;
+        public static double CollisionCheck(decimal lat1, decimal long1, decimal lat2, decimal long2) {
+            //Read data in order, if distance is too close pass distance to WarningMessage
+            double dist;
+
+            double theta = (double)(long1 - long2);
+            dist = Math.Sin(deg2rad((double) lat1)) * Math.Sin(deg2rad((double) lat2)) + Math.Cos(deg2rad((double) lat1)) * Math.Cos(deg2rad((double) lat2)) * Math.Cos(deg2rad(theta));
+            dist = Math.Acos(dist);
+            dist = rad2deg(dist);
+            dist = dist * 60 * 1.1515;
+            return dist;
         }
+
+        private static double deg2rad(double deg)
+        {
+            return (deg * Math.PI / 180.0);
+        }
+
+        private static double rad2deg(double rad)
+        {
+            return (rad / Math.PI * 180.0);
+        }
+
         /*
           *WarningMessage will output a warning Message if two objects
           * within a certain distance of each other.
@@ -36,13 +54,17 @@ namespace InFlightMode
         	int message = 0;
         	if (CollisionDistance > 20)
         	{
+                //no danger
+                Console.WriteLine("You are safe");
         		message = 0;
         	}
         	else
         	{
-        		message = 1;
+                //danger
+                Console.WriteLine("You are in danger");
+                message = 1;
         	}
-            return 0;
+            return message;
         }
         /*
           *ActionRequestMessage will send out an ActionRequestMessage
@@ -62,8 +84,8 @@ namespace InFlightMode
         	string connection =
         		"Server=localhost;" +
         		"Database=gps_data;" +
-        		"User ID=smackers;" +
-        		"Password=1234;" +
+        		"User ID=root;" +
+        		"Password=0427;" +
         		"Pooling=false;";
 
         		IDbConnection dbConn = new MySqlConnection(connection);
@@ -102,15 +124,21 @@ namespace InFlightMode
         	decimal[] safeLong1 = getData(safeTable, long1);
         	decimal[] safeLat2 = getData(safeTable, lat2);
         	decimal[] safeLong2 = getData(safeTable, long2);
-        	int safeMessage = ActionRequestMessage(WarningMessage(CollisionCheck(safeLat1, safeLong1, safeLat2, safeLong2)));
-        	Debug.Assert(safeMessage == 0, "Wrong action request message, expecting 0 but was: " + safeMessage);
+            for(int i = 0; i < safeLat1.Length; i++)
+            {
+                int safeMessage = ActionRequestMessage(WarningMessage(CollisionCheck(safeLat1[i], safeLong1[i], safeLat2[i], safeLong2[i])));
+                Debug.Assert(safeMessage == 0, "Wrong action request message, expecting 0 but was: " + safeMessage);
+            }
 
         	decimal[] dangerLat1 = getData(dangerTable, lat1);
         	decimal[] dangerLong1 = getData(dangerTable, long1);
         	decimal[] dangerLat2 = getData(dangerTable, lat2);
         	decimal[] dangerLong2 = getData(dangerTable, long2);
-        	int collisionMessage = ActionRequestMessage(WarningMessage(CollisionCheck(dangerLat1, dangerLong1, dangerLat2, dangerLong2)));
-        	Debug.Assert(collisionMessage == 1, "Wrong action request message, expecting 1 but was: " + collisionMessage);
+            for (int i = 0; i < dangerLat1.Length; i++)
+            {
+                int collisionMessage = ActionRequestMessage(WarningMessage(CollisionCheck(dangerLat1[i], dangerLong1[i], dangerLat2[i], dangerLong2[i])));
+                Debug.Assert(collisionMessage == 1, "Wrong action request message, expecting 1 but was: " + collisionMessage);
+            }
         }
     }
 }
