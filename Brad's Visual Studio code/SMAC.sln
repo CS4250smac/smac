@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InFlightUnitTest", "InFlightUnitTest\InFlightUnitTest.csproj", "{85E378E3-8EBC-4801-B57E-B087C3E5D1FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InFlightMode", "InFlight\InFlightMode.csproj", "{2C7D76CC-A4FA-4889-B9E3-C26086649D57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMAC", "InFlight\SMAC.csproj", "{2C7D76CC-A4FA-4889-B9E3-C26086649D57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

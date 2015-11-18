@@ -57,9 +57,9 @@
     <Compile Include="InFlightUnitTestStatic.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\InFlight\InFlightMode.csproj">
+    <ProjectReference Include="..\InFlight\SMAC.csproj">
       <Project>{2c7d76cc-a4fa-4889-b9e3-c26086649d57}</Project>
-      <Name>InFlightMode</Name>
+      <Name>SMAC</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
