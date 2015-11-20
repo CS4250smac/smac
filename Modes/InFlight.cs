@@ -10,8 +10,10 @@ using System.Diagnostics;
 
 namespace InFlightMode
 {
-    public class InFlight {
-
+    public class InFlight
+    {
+        public const string CollisionDistanceLessThanZeroMessage = "Collision Distances less than zero";
+        public const string IncorrectWarningLevelMessage = "Warning Level is invalid";
         /*
         *CollisionChecks will take two GPS inputs and checks the
         *current distance between them and checks if both objects vector
@@ -20,24 +22,25 @@ namespace InFlightMode
         *@param GPS1, GPS2
         *@return distance of the two inputs
         */
-        public static double CollisionCheck(decimal lat1, decimal long1, decimal lat2, decimal long2) {
+        public  double CollisionCheck(decimal lat1, decimal long1, decimal lat2, decimal long2)
+        {
             //Read data in order, if distance is too close pass distance to WarningMessage
             double dist;
 
             double theta = (double)(long1 - long2);
-            dist = Math.Sin(deg2rad((double) lat1)) * Math.Sin(deg2rad((double) lat2)) + Math.Cos(deg2rad((double) lat1)) * Math.Cos(deg2rad((double) lat2)) * Math.Cos(deg2rad(theta));
+            dist = Math.Sin(deg2rad((double)lat1)) * Math.Sin(deg2rad((double)lat2)) + Math.Cos(deg2rad((double)lat1)) * Math.Cos(deg2rad((double)lat2)) * Math.Cos(deg2rad(theta));
             dist = Math.Acos(dist);
             dist = rad2deg(dist);
             dist = dist * 60 * 1.1515;
             return dist;
         }
 
-        private static double deg2rad(double deg)
+        private  double deg2rad(double deg)
         {
             return (deg * Math.PI / 180.0);
         }
 
-        private static double rad2deg(double rad)
+        private  double rad2deg(double rad)
         {
             return (rad / Math.PI * 180.0);
         }
@@ -49,22 +52,45 @@ namespace InFlightMode
           *@param CollisionDistance
           *@return Warninglevel
           */
-        public static int WarningMessage(double CollisionDistance)
+        public  int WarningMessage(double CollisionDistance)
         {
-        	int message = 0;
-        	if (CollisionDistance > 20)
-        	{
-                //no danger
-                Console.WriteLine("You are safe");
-        		message = 0;
-        	}
-        	else
-        	{
-                //danger
-                Console.WriteLine("You are in danger");
+               
+            if ( CollisionDistance < 0)
+            {
+                throw new ArgumentOutOfRangeException("Distance", CollisionDistance, CollisionDistanceLessThanZeroMessage);
+            }
+
+             
+            int message = 0;
+    
+
+
+
+            if (CollisionDistance < 10)
+            {
+                //Action needs to occur- follow by action
+                Console.WriteLine("Immediate Action Required");
+                message = 3;
+            }
+            else if (CollisionDistance < 20)
+            {
+                //Warning action needs to occur- follow by action
+                Console.WriteLine("Traffic Alert");
+                message = 2;
+            }
+            else if (CollisionDistance < 30)
+            {
+                //Warning message no action request
+                Console.WriteLine("Traffic Warning");
                 message = 1;
-        	}
+            }
+            else
+            {
+                Console.WriteLine("No conflict.");
+                message = 0;
+            }
             return message;
+
         }
         /*
           *ActionRequestMessage will send out an ActionRequestMessage
@@ -73,72 +99,91 @@ namespace InFlightMode
           *@param warningLevel;
           *@return ActionRequestMessage
           */
-        public static int ActionRequestMessage(int warningLevel)
+        public  int ActionRequestMessage(int warningLevel)
         {
+            if (warningLevel < 0)
+            {
+                throw new ArgumentOutOfRangeException("warningLevel", warningLevel, IncorrectWarningLevelMessage);
+            }
+            //Climb
+            //Descend
+
+            //Reduce climb.
+            //Reduce descent.
+            //increase Climb
+            //Increase descent
+
+            //maintain vertical speed
+            //Level off
+            //Monitor vertical speed.
+
+            //Clear of Conflict
+
             return warningLevel;
         }
 
         public static decimal[] getData(string table, string col)
         {
 
-        	string connection =
-        		"Server=localhost;" +
-        		"Database=gps_data;" +
-        		"User ID=root;" +
-        		"Password=0427;" +
-        		"Pooling=false;";
+            string connection =
+                "Server=localhost;" +
+                "Database=gps_data;" +
+                "User ID=root;" +
+                "Password=0427;" +
+                "Pooling=false;";
 
-        		IDbConnection dbConn = new MySqlConnection(connection);
-        		dbConn.Open();
-        		IDbCommand dbCmd = dbConn.CreateCommand();
+            IDbConnection dbConn = new MySqlConnection(connection);
+            dbConn.Open();
+            IDbCommand dbCmd = dbConn.CreateCommand();
 
-        		string sqlQuery =
-        			"SELECT " + col +
-        			" FROM " + table;
+            string sqlQuery =
+                "SELECT " + col +
+                " FROM " + table;
 
-        		dbCmd.CommandText = sqlQuery;
-        		IDataReader reader = dbCmd.ExecuteReader();
-        		decimal[] vals = new decimal[50];
-        		int i = 0;
-        		while(reader.Read())
-        		{
-        			Console.WriteLine("Adding value: " + reader [col] + ", from " + table + ".");
-        			vals[i] = (decimal) reader[col];
-        			i++;
-        		}
-        		//Close and cleanup MySql connection
-        		reader.Close();
-        		reader = null;
-        		dbCmd.Dispose();
-        		dbCmd = null;
-        		dbConn.Close();
-        		dbConn = null;
+            dbCmd.CommandText = sqlQuery;
+            IDataReader reader = dbCmd.ExecuteReader();
+            decimal[] vals = new decimal[50];
+            int i = 0;
+            while (reader.Read())
+            {
+                Console.WriteLine("Adding value: " + reader[col] + ", from " + table + ".");
+                vals[i] = (decimal)reader[col];
+                i++;
+            }
+            //Close and cleanup MySql connection
+            reader.Close();
+            reader = null;
+            dbCmd.Dispose();
+            dbCmd = null;
+            dbConn.Close();
+            dbConn = null;
 
-        		return vals;
+            return vals;
         }
 
-        public static void Main(string[] args) {
-        	string safeTable = "safe_data", dangerTable = "collision_data", lat1 = "latitude_1", long1 = "longitude_1", lat2 = "latitude_2", long2 = "longitude_2";
+        //public static void main(string[] args)
+        //{
+        //    string safetable = "safe_data", dangertable = "collision_data", lat1 = "latitude_1", long1 = "longitude_1", lat2 = "latitude_2", long2 = "longitude_2";
 
-        	decimal[] safeLat1 = getData(safeTable, lat1);
-        	decimal[] safeLong1 = getData(safeTable, long1);
-        	decimal[] safeLat2 = getData(safeTable, lat2);
-        	decimal[] safeLong2 = getData(safeTable, long2);
-            for(int i = 0; i < safeLat1.Length; i++)
-            {
-                int safeMessage = ActionRequestMessage(WarningMessage(CollisionCheck(safeLat1[i], safeLong1[i], safeLat2[i], safeLong2[i])));
-                Debug.Assert(safeMessage == 0, "Wrong action request message, expecting 0 but was: " + safeMessage);
-            }
+        //    decimal[] safelat1 = getdata(safetable, lat1);
+        //    decimal[] safelong1 = getdata(safetable, long1);
+        //    decimal[] safelat2 = getdata(safetable, lat2);
+        //    decimal[] safelong2 = getdata(safetable, long2);
+        //    for (int i = 0; i < safelat1.length; i++)
+        //    {
+        //        int safemessage = actionrequestmessage(warningmessage(collisioncheck(safelat1[i], safelong1[i], safelat2[i], safelong2[i])));
+        //        debug.assert(safemessage == 0, "wrong action request message, expecting 0 but was: " + safemessage);
+        //    }
 
-        	decimal[] dangerLat1 = getData(dangerTable, lat1);
-        	decimal[] dangerLong1 = getData(dangerTable, long1);
-        	decimal[] dangerLat2 = getData(dangerTable, lat2);
-        	decimal[] dangerLong2 = getData(dangerTable, long2);
-            for (int i = 0; i < dangerLat1.Length; i++)
-            {
-                int collisionMessage = ActionRequestMessage(WarningMessage(CollisionCheck(dangerLat1[i], dangerLong1[i], dangerLat2[i], dangerLong2[i])));
-                Debug.Assert(collisionMessage == 1, "Wrong action request message, expecting 1 but was: " + collisionMessage);
-            }
-        }
+        //    decimal[] dangerlat1 = getdata(dangertable, lat1);
+        //    decimal[] dangerlong1 = getdata(dangertable, long1);
+        //    decimal[] dangerlat2 = getdata(dangertable, lat2);
+        //    decimal[] dangerlong2 = getdata(dangertable, long2);
+        //    for (int i = 0; i < dangerlat1.length; i++)
+        //    {
+        //        int collisionmessage = actionrequestmessage(warningmessage(collisioncheck(dangerlat1[i], dangerlong1[i], dangerlat2[i], dangerlong2[i])));
+        //        debug.assert(collisionmessage == 1, "wrong action request message, expecting 1 but was: " + collisionmessage);
+        //    }
+        //}
     }
 }
