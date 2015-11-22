@@ -13,7 +13,7 @@ CREATE TABLE `collision_data` (
   `longitude_2` decimal(8,5) DEFAULT NULL,
   `altitude_2` smallint(6) DEFAULT NULL
 );
-
+[source,end]
 [source,mysql]
  CREATE TABLE `safe_data` (
   `id` bigint(20) DEFAULT NULL,
