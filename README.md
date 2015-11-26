@@ -3,7 +3,7 @@ Repository for SMAC project including tests, code, &amp;c
 
 Query to create the tables needed for the data generator:
 
-
+{code:sql}
 CREATE TABLE `collision_data` (
   `id` bigint(20) DEFAULT NULL,
   `latitude_1` decimal(8,5) DEFAULT NULL,
@@ -13,8 +13,9 @@ CREATE TABLE `collision_data` (
   `longitude_2` decimal(8,5) DEFAULT NULL,
   `altitude_2` smallint(6) DEFAULT NULL
 );
+{code}
 
-
+{code:sql}
  CREATE TABLE `safe_data` (
   `id` bigint(20) DEFAULT NULL,
   `latitude_1` decimal(8,5) DEFAULT NULL,
@@ -24,9 +25,10 @@ CREATE TABLE `collision_data` (
   `longitude_2` decimal(8,5) DEFAULT NULL,
   `altitude_2` smallint(6) DEFAULT NULL
 );
+{code}
 
 Once run in a mysql db you should be able to run the following commands and see:
-
+{code:sql}
 mysql> show tables;
 +--------------------+
 | Tables_in_gps_data |
@@ -63,3 +65,4 @@ mysql> show columns from collision_data;
 | altitude_2  | smallint(6)  | YES  |     | NULL    |       |
 +-------------+--------------+------+-----+---------+-------+
 7 rows in set (0.00 sec)
+{code}
