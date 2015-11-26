@@ -5,12 +5,17 @@ using System.Diagnostics;
 /*
 * @author team SMAC
 *
-* Barebones method and inputs.
+* Verision 1
 */
 
 namespace InFlightMode
 {
     public class InFlight {
+
+
+        public const string CollisionDistanceLessThanZeroMessage = "Collision Distances less than zero";
+        public const string IncorrectWarningLevelMessage = "Warning Level is invalid";
+
 
         /*
         *CollisionChecks will take two GPS inputs and checks the
@@ -20,6 +25,7 @@ namespace InFlightMode
         *@param GPS1, GPS2
         *@return distance of the two inputs
         */
+        // need to finish with altitude on distance calculation
         public static double collisionCheck(decimal lat1, decimal lon1, decimal lat2, decimal lon2)
         {
             double R = 6372.8; // In kilometers
@@ -53,6 +59,12 @@ namespace InFlightMode
           */
         public static int WarningMessage(double CollisionDistance)
         {
+            if (CollisionDistance < 0)
+            {
+                throw new ArgumentOutOfRangeException("Distance", CollisionDistance, CollisionDistanceLessThanZeroMessage);
+            }
+
+
             int message = 0;
             if (CollisionDistance > 300)
             {
@@ -87,11 +99,43 @@ namespace InFlightMode
           * When two object need to avoid a collison
           *
           *@param warningLevel;
-          *@return ActionRequestMessage
+          *@return ActionRequestMessage 1 would mean to ascend, 2 descend and 3 to turn
           */
-        public static int ActionRequestMessage(int warningLevel)
+          //feature to add previous warning message to indict all clear. this would require vectors and another class to do.
+        public static int ActionRequestMessage(int warningLevel, double alt1, double alt2)
         {
-            return warningLevel;
+            if (warningLevel < 0 || warningLevel >= 4)
+            {
+                throw new ArgumentOutOfRangeException("warningLevel", warningLevel, IncorrectWarningLevelMessage);
+            }
+
+
+            if (warningLevel = 3 || WarningMessage = 2)
+            {
+                if (alt1 > alt2)
+                {
+                    Console.WriteLine("Ascend");
+                    return 1;
+                }
+
+                else if (al1 < alt2)
+                {
+                    Console.WriteLine("Descend");
+                    return 2;
+                }
+
+                else
+                {
+
+                    // Feature to add which direction to turn left or right, slowdown, speed up 
+                    Console.turn("Turn");
+                    return 3;
+                }
+                
+            }
+            
+
+            return 0;
         }
 
         public static decimal[] getData(string table, string col)
